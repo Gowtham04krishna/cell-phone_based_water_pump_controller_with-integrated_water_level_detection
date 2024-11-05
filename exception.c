@@ -158,25 +158,7 @@ int main(void) {
     }
 }
 
-void MPU_Config(void) {
-    // Disable the MPU
-    MPU->CTRL = 0;
 
-    // Configure region 0 as Execute Never (XN)
-    MPU->RNR = 0;  // Select region 0
-    MPU->RBAR = 0x20000000;  // Base address at start of SRAM
-    MPU->RASR = (1 << 28) |  // Set XN bit to prevent execution
-                (3 << 24) |  // Set full access permissions (privileged and unprivileged access)
-                (0 << 19) |  // Region size: 4KB (log2(size) - 1)
-                (1 << 0);    // Enable region
-
-    // Enable the MPU with the default memory map as background
-    MPU->CTRL = (1 << 2) |  // Enable background region
-                (1 << 0);   // Enable MPU globally
-
-    // Enable fault exceptions for memory management faults
-    SCB->SHCSR |= SCB_SHCSR_MEMFAULTENA_Msk;
-}
 
 // Function to intentionally trigger a usage fault
 void trigger_usage_fault(void) {
